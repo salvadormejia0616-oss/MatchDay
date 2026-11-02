@@ -1,0 +1,397 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equipos | MatchDay</title>
+
+  <link rel="stylesheet" href="css/styles.css">
+
+  <style>
+    /* TARJETAS DE EQUIPOS */
+    .equipos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      margin: 30px 0 75px;
+    }
+
+    .equipo-card {
+      background: white;
+      border: 1px solid #e2e9e3;
+      border-radius: 14px;
+      padding: 30px 22px;
+      text-align: center;
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .equipo-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px #103e2a18;
+    }
+
+    .equipo-card img {
+      width: 95px;
+      height: 95px;
+      object-fit: contain;
+      margin-bottom: 20px;
+    }
+
+    .equipo-card h3 {
+      font-size: 21px;
+      margin-bottom: 8px;
+    }
+
+    .equipo-card p {
+      color: #718077;
+      font-size: 13px;
+      margin-bottom: 25px;
+    }
+
+    .boton-historia {
+      width: 100%;
+      border: none;
+      border-radius: 7px;
+      padding: 13px;
+      background: #0e3f2a;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .boton-historia:hover {
+      background: #176b45;
+    }
+
+    /* VENTANA EMERGENTE */
+    .modal-fondo {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #000b;
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-fondo.visible {
+      display: flex;
+    }
+
+    .modal-equipo {
+      position: relative;
+      background: white;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 510px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 35px;
+      text-align: center;
+    }
+
+    .cerrar {
+      position: absolute;
+      right: 16px;
+      top: 12px;
+      border: 0;
+      background: none;
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    .modal-equipo img {
+      width: 105px;
+      height: 105px;
+      object-fit: contain;
+      margin-bottom: 15px;
+    }
+
+    .modal-equipo h2 {
+      font-size: 29px;
+      margin-bottom: 22px;
+    }
+
+    .datos-equipo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+
+    .dato {
+      background: #f2f6f2;
+      padding: 15px;
+      border-radius: 9px;
+    }
+
+    .dato span {
+      display: block;
+      color: #718077;
+      font-size: 11px;
+      margin-bottom: 7px;
+    }
+
+    .dato strong {
+      font-size: 14px;
+    }
+
+    .historia {
+      text-align: left;
+      line-height: 1.8;
+      color: #526157;
+      font-size: 14px;
+    }
+
+    .historia h3 {
+      color: #153e2a;
+      margin-bottom: 8px;
+    }
+
+    .pie {
+      background: #0e3f2a;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    @media (max-width: 800px) {
+      .equipos-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 500px) {
+      .equipos-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- MENÚ -->
+  <nav class="nav">
+    <div class="container nav-inner">
+
+      <a class="brand" href="index.html">
+        <span class="brand-mark">M</span>
+        <span>MATCH<span class="brand-day">DAY</span></span>
+      </a>
+
+      <button class="menu-toggle"
+              aria-label="Abrir menú"
+              aria-expanded="false">☰</button>
+
+      <div class="nav-links">
+        <a href="index.html">Inicio</a>
+        <a href="partidos.html">Partidos</a>
+        <a href="resultados.html">Resultados</a>
+        <a href="equipos.html" class="active">Equipos</a>
+        <a href="tienda.html">Tienda</a>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- ENCABEZADO -->
+  <header class="page-header">
+    <div class="container">
+      <span class="eyebrow">MATCHDAY / CLUBES</span>
+      <h1>Equipos destacados</h1>
+      <p>Conoce la historia de algunos de los clubes más importantes del fútbol.</p>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <span class="kicker">LOS CLUBES</span>
+          <h2>Descubre los equipos</h2>
+        </div>
+      </div>
+
+      <div class="equipos-grid" id="listaEquipos"></div>
+    </section>
+
+  </main>
+
+  <!-- VENTANA DE HISTORIA -->
+  <div class="modal-fondo" id="ventana">
+
+    <div class="modal-equipo">
+
+      <button class="cerrar" id="cerrar"
+              aria-label="Cerrar ventana">×</button>
+
+      <img id="modalEscudo" alt="Escudo del equipo">
+
+      <h2 id="modalNombre"></h2>
+
+      <div class="datos-equipo">
+
+        <div class="dato">
+          <span>FUNDACIÓN</span>
+          <strong id="modalFundacion"></strong>
+        </div>
+
+        <div class="dato">
+          <span>ESTADIO</span>
+          <strong id="modalEstadio"></strong>
+        </div>
+
+      </div>
+
+      <div class="historia">
+        <h3>Historia del club</h3>
+        <p id="modalHistoria"></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="pie">
+    <strong>MATCHDAY</strong>
+    <p>El fútbol se vive aquí.</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+
+  <script>
+    // Información de nuestros seis clubes
+    const equipos = [
+      {
+        nombre: "Real Madrid",
+        pais: "España",
+        fundacion: "1902",
+        estadio: "Santiago Bernabéu",
+        escudo: "86",
+        historia: "Fundado en 1902, el Real Madrid es uno de los clubes más exitosos de la historia. Es reconocido mundialmente por sus títulos europeos, sus grandes futbolistas y su tradición ganadora."
+      },
+      {
+        nombre: "Barcelona",
+        pais: "España",
+        fundacion: "1899",
+        estadio: "Spotify Camp Nou",
+        escudo: "83",
+        historia: "El FC Barcelona fue fundado en 1899. Es famoso por su estilo de juego ofensivo, su cantera La Masia y figuras históricas como Lionel Messi, Xavi Hernández y Andrés Iniesta."
+      },
+      {
+        nombre: "América",
+        pais: "México",
+        fundacion: "1916",
+        estadio: "Estadio Ciudad de los Deportes",
+        escudo: "227",
+        historia: "El Club América nació en 1916 en la Ciudad de México. Es uno de los equipos más populares y exitosos del país, reconocido por sus campeonatos y sus grandes rivalidades."
+      },
+      {
+        nombre: "Arsenal",
+        pais: "Inglaterra",
+        fundacion: "1886",
+        estadio: "Emirates Stadium",
+        escudo: "359",
+        historia: "Fundado en 1886, el Arsenal es un club histórico de Londres. Una de sus mayores hazañas fue conquistar la Premier League 2003-2004 sin perder un solo partido."
+      },
+      {
+        nombre: "Chelsea",
+        pais: "Inglaterra",
+        fundacion: "1905",
+        estadio: "Stamford Bridge",
+        escudo: "363",
+        historia: "El Chelsea fue fundado en Londres en 1905. A lo largo de su historia ha conquistado importantes títulos nacionales e internacionales, incluyendo la UEFA Champions League."
+      },
+      {
+        nombre: "Manchester City",
+        pais: "Inglaterra",
+        fundacion: "1894",
+        estadio: "Etihad Stadium",
+        escudo: "382",
+        historia: "El Manchester City adoptó su nombre actual en 1894. Durante las últimas décadas se ha consolidado como una potencia del fútbol inglés y europeo, destacando por su estilo ofensivo."
+      }
+    ];
+
+    // Obtener dirección del escudo
+    function obtenerEscudo(id) {
+      return "https://a.espncdn.com/i/teamlogos/soccer/500/"
+        + id + ".png";
+    }
+
+    const lista = document.getElementById("listaEquipos");
+
+    // Crear las tarjetas
+    equipos.forEach(function(equipo, posicion) {
+
+      lista.innerHTML += `
+        <article class="equipo-card">
+
+          <img src="${obtenerEscudo(equipo.escudo)}"
+               alt="${equipo.nombre}">
+
+          <h3>${equipo.nombre}</h3>
+
+          <p>${equipo.pais}</p>
+
+          <button class="boton-historia"
+                  onclick="verHistoria(${posicion})">
+            Ver historia ↗
+          </button>
+
+        </article>
+      `;
+    });
+
+    // Mostrar historia del equipo seleccionado
+    function verHistoria(posicion) {
+
+      const equipo = equipos[posicion];
+
+      document.getElementById("modalEscudo").src =
+        obtenerEscudo(equipo.escudo);
+
+      document.getElementById("modalNombre").textContent =
+        equipo.nombre;
+
+      document.getElementById("modalFundacion").textContent =
+        equipo.fundacion;
+
+      document.getElementById("modalEstadio").textContent =
+        equipo.estadio;
+
+      document.getElementById("modalHistoria").textContent =
+        equipo.historia;
+
+      document.getElementById("ventana")
+        .classList.add("visible");
+    }
+
+    // Cerrar ventana
+    function cerrarVentana() {
+      document.getElementById("ventana")
+        .classList.remove("visible");
+    }
+
+    document.getElementById("cerrar")
+      .addEventListener("click", cerrarVentana);
+
+    document.getElementById("ventana")
+      .addEventListener("click", function(evento) {
+        if (evento.target === this) {
+          cerrarVentana();
+        }
+      });
+
+    document.addEventListener("keydown", function(evento) {
+      if (evento.key === "Escape") {
+        cerrarVentana();
+      }
+    });
+  </script>
+
+</body>
+</html>

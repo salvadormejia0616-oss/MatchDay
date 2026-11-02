@@ -1,0 +1,532 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resultados | MatchDay</title>
+
+  <link rel="stylesheet" href="css/styles.css">
+
+  <style>
+    /* ESTADÍSTICAS */
+    .estadisticas {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin: 30px 0 45px;
+    }
+
+    .estadistica {
+      background: white;
+      border: 1px solid #e1e8e1;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 5px 20px #0e3f2a0b;
+    }
+
+    .estadistica span {
+      display: block;
+      color: #718077;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .estadistica strong {
+      color: #0e3f2a;
+      font-size: 38px;
+      font-weight: 900;
+    }
+
+    /* RESULTADOS */
+    .resultados-lista {
+      display: grid;
+      gap: 15px;
+      margin: 25px 0 75px;
+    }
+
+    .resultado {
+      background: white;
+      border: 1px solid #e1e8e1;
+      border-radius: 12px;
+      padding: 22px 26px;
+      display: grid;
+      grid-template-columns: 120px 1fr auto 1fr auto;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 5px 20px #0e3f2a0b;
+    }
+
+    .resultado-liga {
+      color: #718077;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .resultado-equipo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .resultado-equipo img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+    }
+
+    .resultado-equipo.visitante {
+      justify-content: flex-end;
+    }
+
+    .marcador {
+      background: #0e3f2a;
+      color: white;
+      padding: 13px 18px;
+      border-radius: 8px;
+      font-size: 22px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .boton-detalles {
+      background: transparent;
+      color: #176b45;
+      border: 1px solid #a6c5af;
+      border-radius: 7px;
+      padding: 11px 15px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .boton-detalles:hover {
+      background: #eaf4ec;
+    }
+
+    /* VENTANA EMERGENTE */
+    .modal-fondo {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #000b;
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-fondo.visible {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      width: 100%;
+      max-width: 480px;
+      border-radius: 15px;
+      padding: 35px;
+      text-align: center;
+      position: relative;
+    }
+
+    .cerrar {
+      position: absolute;
+      top: 12px;
+      right: 17px;
+      background: none;
+      border: 0;
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    .modal-escudos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 22px;
+      margin: 25px 0;
+    }
+
+    .modal-escudos img {
+      width: 85px;
+      height: 85px;
+      object-fit: contain;
+    }
+
+    .modal-marcador {
+      font-size: 30px;
+      font-weight: 900;
+      color: #0e3f2a;
+    }
+
+    .modal h2 {
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+
+    .modal p {
+      color: #66756b;
+      margin: 10px 0;
+    }
+
+    .pie {
+      background: #0e3f2a;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    @media (max-width: 950px) {
+      .resultado {
+        grid-template-columns: 1fr auto 1fr;
+        gap: 12px;
+      }
+
+      .resultado-liga {
+        grid-column: 1 / -1;
+      }
+
+      .boton-detalles {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .estadisticas {
+        grid-template-columns: 1fr;
+      }
+
+      .resultado {
+        padding: 18px;
+      }
+
+      .resultado-equipo {
+        flex-direction: column;
+        text-align: center;
+        font-size: 12px;
+      }
+
+      .resultado-equipo.visitante {
+        flex-direction: column-reverse;
+      }
+
+      .resultado-equipo img {
+        width: 35px;
+        height: 35px;
+      }
+
+      .marcador {
+        font-size: 17px;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVEGACIÓN -->
+  <nav class="nav">
+    <div class="container nav-inner">
+
+      <a class="brand" href="index.html">
+        <span class="brand-mark">M</span>
+        <span>MATCH<span class="brand-day">DAY</span></span>
+      </a>
+
+      <button class="menu-toggle"
+              aria-label="Abrir menú"
+              aria-expanded="false">☰</button>
+
+      <div class="nav-links">
+        <a href="index.html">Inicio</a>
+        <a href="partidos.html">Partidos</a>
+        <a href="resultados.html" class="active">Resultados</a>
+        <a href="equipos.html">Equipos</a>
+        <a href="tienda.html">Tienda</a>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- ENCABEZADO -->
+  <header class="page-header">
+    <div class="container">
+      <span class="eyebrow">MATCHDAY / MARCADORES</span>
+      <h1>Resultados</h1>
+      <p>Consulta los marcadores de los encuentros destacados.</p>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ESTADÍSTICAS -->
+    <section class="section">
+
+      <div class="section-heading">
+        <div>
+          <span class="kicker">EL RESUMEN</span>
+          <h2>En números</h2>
+        </div>
+      </div>
+
+      <div class="estadisticas">
+
+        <div class="estadistica">
+          <span>PARTIDOS</span>
+          <strong id="totalPartidos">0</strong>
+        </div>
+
+        <div class="estadistica">
+          <span>GOLES</span>
+          <strong id="totalGoles">0</strong>
+        </div>
+
+        <div class="estadistica">
+          <span>EQUIPOS PARTICIPANTES</span>
+          <strong id="totalEquipos">0</strong>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- MARCADORES -->
+    <section class="section">
+
+      <div class="section-heading">
+        <div>
+          <span class="kicker">LOS ENCUENTROS</span>
+          <h2>Últimos resultados</h2>
+        </div>
+      </div>
+
+      <div class="resultados-lista" id="listaResultados"></div>
+
+    </section>
+
+  </main>
+
+  <!-- VENTANA DE DETALLES -->
+  <div class="modal-fondo" id="ventana">
+
+    <div class="modal">
+
+      <button class="cerrar" id="cerrar"
+              aria-label="Cerrar ventana">×</button>
+
+      <span class="kicker" id="modalLiga"></span>
+
+      <div class="modal-escudos">
+        <img id="escudoLocal" alt="Equipo local">
+
+        <span class="modal-marcador" id="modalMarcador"></span>
+
+        <img id="escudoVisitante" alt="Equipo visitante">
+      </div>
+
+      <h2 id="modalPartido"></h2>
+
+      <p id="modalEstadio"></p>
+      <p id="modalCiudad"></p>
+
+    </div>
+  </div>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="pie">
+    <strong>MATCHDAY</strong>
+    <p>El fútbol se vive aquí.</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+
+  <script>
+    // Lista de resultados
+    const resultados = [
+      {
+        liga: "LALIGA",
+        local: "Real Madrid",
+        visitante: "Barcelona",
+        golesLocal: 2,
+        golesVisitante: 1,
+        escudoLocal: "86",
+        escudoVisitante: "83",
+        estadio: "Santiago Bernabéu",
+        ciudad: "Madrid, España"
+      },
+      {
+        liga: "PREMIER LEAGUE",
+        local: "Liverpool",
+        visitante: "Chelsea",
+        golesLocal: 3,
+        golesVisitante: 0,
+        escudoLocal: "364",
+        escudoVisitante: "363",
+        estadio: "Anfield",
+        ciudad: "Liverpool, Inglaterra"
+      },
+      {
+        liga: "LIGA MX",
+        local: "América",
+        visitante: "Cruz Azul",
+        golesLocal: 2,
+        golesVisitante: 2,
+        escudoLocal: "227",
+        escudoVisitante: "218",
+        estadio: "Estadio Ciudad de los Deportes",
+        ciudad: "Ciudad de México"
+      },
+      {
+        liga: "PREMIER LEAGUE",
+        local: "Manchester City",
+        visitante: "Arsenal",
+        golesLocal: 1,
+        golesVisitante: 1,
+        escudoLocal: "382",
+        escudoVisitante: "359",
+        estadio: "Etihad Stadium",
+        ciudad: "Mánchester, Inglaterra"
+      },
+      {
+        liga: "LALIGA",
+        local: "Atlético de Madrid",
+        visitante: "Sevilla",
+        golesLocal: 3,
+        golesVisitante: 1,
+        escudoLocal: "1068",
+        escudoVisitante: "243",
+        estadio: "Metropolitano",
+        ciudad: "Madrid, España"
+      },
+      {
+        liga: "PREMIER LEAGUE",
+        local: "Manchester United",
+        visitante: "Tottenham",
+        golesLocal: 2,
+        golesVisitante: 0,
+        escudoLocal: "360",
+        escudoVisitante: "367",
+        estadio: "Old Trafford",
+        ciudad: "Mánchester, Inglaterra"
+      }
+    ];
+
+    // Dirección de los escudos
+    function obtenerEscudo(id) {
+      return "https://a.espncdn.com/i/teamlogos/soccer/500/"
+        + id + ".png";
+    }
+
+    const lista = document.getElementById("listaResultados");
+
+    // Crear las tarjetas de resultados
+    resultados.forEach(function(resultado, posicion) {
+
+      lista.innerHTML += `
+        <article class="resultado">
+
+          <span class="resultado-liga">${resultado.liga}</span>
+
+          <div class="resultado-equipo">
+            <img src="${obtenerEscudo(resultado.escudoLocal)}"
+                 alt="${resultado.local}">
+            <span>${resultado.local}</span>
+          </div>
+
+          <span class="marcador">
+            ${resultado.golesLocal} - ${resultado.golesVisitante}
+          </span>
+
+          <div class="resultado-equipo visitante">
+            <span>${resultado.visitante}</span>
+            <img src="${obtenerEscudo(resultado.escudoVisitante)}"
+                 alt="${resultado.visitante}">
+          </div>
+
+          <button class="boton-detalles"
+                  onclick="verDetalles(${posicion})">
+            Ver detalles ↗
+          </button>
+
+        </article>
+      `;
+    });
+
+    // Calcular las estadísticas
+    document.getElementById("totalPartidos").textContent =
+      resultados.length;
+
+    let goles = 0;
+    const equipos = new Set();
+
+    resultados.forEach(function(resultado) {
+      goles += resultado.golesLocal + resultado.golesVisitante;
+
+      equipos.add(resultado.local);
+      equipos.add(resultado.visitante);
+    });
+
+    document.getElementById("totalGoles").textContent = goles;
+    document.getElementById("totalEquipos").textContent = equipos.size;
+
+    // Mostrar detalles de un resultado
+    function verDetalles(posicion) {
+
+      const resultado = resultados[posicion];
+
+      document.getElementById("modalLiga").textContent =
+        resultado.liga;
+
+      document.getElementById("modalPartido").textContent =
+        resultado.local + " vs " + resultado.visitante;
+
+      document.getElementById("modalMarcador").textContent =
+        resultado.golesLocal + " - " + resultado.golesVisitante;
+
+      document.getElementById("modalEstadio").textContent =
+        "Estadio: " + resultado.estadio;
+
+      document.getElementById("modalCiudad").textContent =
+        resultado.ciudad;
+
+      document.getElementById("escudoLocal").src =
+        obtenerEscudo(resultado.escudoLocal);
+
+      document.getElementById("escudoVisitante").src =
+        obtenerEscudo(resultado.escudoVisitante);
+
+      document.getElementById("ventana")
+        .classList.add("visible");
+    }
+
+    // Cerrar la ventana
+    function cerrarVentana() {
+      document.getElementById("ventana")
+        .classList.remove("visible");
+    }
+
+    document.getElementById("cerrar")
+      .addEventListener("click", cerrarVentana);
+
+    document.getElementById("ventana")
+      .addEventListener("click", function(evento) {
+        if (evento.target === this) {
+          cerrarVentana();
+        }
+      });
+
+    document.addEventListener("keydown", function(evento) {
+      if (evento.key === "Escape") {
+        cerrarVentana();
+      }
+    });
+  </script>
+
+</body>
+</html>

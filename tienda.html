@@ -1,0 +1,518 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MatchDay Store</title>
+
+  <link rel="stylesheet" href="css/styles.css">
+
+  <style>
+    /* VENTANA DE PRODUCTO */
+    .modal-fondo {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-fondo.visible {
+      display: flex;
+    }
+
+    .modal-contenido {
+      background: #171d19;
+      color: white;
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border: 1px solid #3c4a40;
+      border-radius: 14px;
+      padding: 28px;
+      position: relative;
+      text-align: center;
+      box-shadow: 0 20px 70px rgba(0,0,0,.5);
+    }
+
+    .cerrar-modal {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    .modal-imagen {
+      width: 100%;
+      height: 230px;
+      object-fit: cover;
+      border-radius: 9px;
+      margin-bottom: 20px;
+    }
+
+    .modal-contenido h2 {
+      font-family: 'Barlow Condensed', Arial, sans-serif;
+      font-size: 35px;
+      margin: 10px 0;
+      text-transform: uppercase;
+    }
+
+    .modal-precio {
+      font-size: 26px;
+      font-weight: 800;
+      color: #b4dfbb;
+      margin: 15px 0 25px;
+    }
+
+    .boton-modal {
+      display: block;
+      width: 100%;
+      background: #ffffff;
+      color: #13251a;
+      border: none;
+      border-radius: 7px;
+      padding: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .boton-modal:hover {
+      background: #b4dfbb;
+    }
+
+    .modal-descripcion {
+      color: #aab9ae;
+      line-height: 1.6;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .campo-email {
+      width: 100%;
+      padding: 15px;
+      border-radius: 7px;
+      border: 1px solid #627366;
+      background: #232d26;
+      color: white;
+      font-size: 15px;
+      margin-bottom: 15px;
+    }
+
+    .campo-email:focus {
+      outline: 2px solid #a4d7b2;
+    }
+
+    .mensaje-gracias {
+      font-size: 16px;
+      line-height: 1.8;
+      color: #d6e8da;
+      margin: 20px 0;
+    }
+
+    .check-gracias {
+      font-size: 48px;
+      color: #a4d7b2;
+      margin-bottom: 10px;
+    }
+
+    .oculto {
+      display: none;
+    }
+
+    /* Eliminamos los avisos antiguos */
+    .store-disclaimer {
+      display: none;
+    }
+
+    .store-page .footer-meta {
+      display: none;
+    }
+  </style>
+</head>
+
+<body class="store-page">
+
+  <!-- NAVEGACIÓN -->
+  <nav class="nav">
+    <div class="container nav-inner">
+
+      <a class="brand" href="index.html">
+        <span class="brand-mark">M</span>
+        <span>MATCH<span class="brand-day">DAY</span></span>
+      </a>
+
+      <button class="menu-toggle"
+              aria-label="Abrir menú"
+              aria-expanded="false">☰</button>
+
+      <div class="nav-links">
+        <a href="index.html">Inicio</a>
+        <a href="partidos.html">Partidos</a>
+        <a href="resultados.html">Resultados</a>
+        <a href="equipos.html">Equipos</a>
+        <a href="tienda.html" class="active">Tienda</a>
+      </div>
+
+      <span class="nav-caption">THE BEAUTIFUL GAME.</span>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- PORTADA DE LA TIENDA -->
+    <section class="store-hero">
+      <div class="container store-hero-grid">
+
+        <div>
+          <span class="eyebrow">MATCHDAY / ORIGINALS</span>
+
+          <h1>
+            MÁS QUE<br>
+            <em>FÚTBOL.</em>
+          </h1>
+
+          <p>Diseño, rendimiento y estilo para todos los días.</p>
+
+          <a href="#coleccion" class="btn btn-white">
+            Explorar colección ↘
+          </a>
+        </div>
+
+        <img src="img/store-banner.jpg"
+             alt="Colección MatchDay">
+      </div>
+    </section>
+
+    <!-- CATÁLOGO -->
+    <section id="coleccion" class="container store-collection">
+
+      <div class="section-heading">
+        <div>
+          <span class="kicker">01 / LA COLECCIÓN</span>
+          <h2>MatchDay Originals</h2>
+        </div>
+        <p>Cuatro productos. Una sola identidad.</p>
+      </div>
+
+      <div class="product-grid">
+
+        <!-- BALÓN -->
+        <article class="product-card">
+
+          <div class="product-image">
+            <img src="img/balon.jpg" alt="Balón MatchDay">
+            <span class="product-number">01</span>
+          </div>
+
+          <div class="product-info">
+            <span class="product-category">MATCHDAY ORIGINALS</span>
+
+            <h3>BALÓN MATCHDAY PRO</h3>
+
+            <p>Diseño exclusivo para vivir el fútbol.</p>
+
+            <div class="product-buy">
+              <strong>$699 <small>MXN</small></strong>
+
+              <button class="ver-producto"
+                data-nombre="BALÓN MATCHDAY PRO"
+                data-precio="$699 MXN"
+                data-imagen="img/balon.jpg">
+                Ver producto ↗
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- GORRA -->
+        <article class="product-card">
+
+          <div class="product-image">
+            <img src="img/gorra.jpg" alt="Gorra MatchDay">
+            <span class="product-number">02</span>
+          </div>
+
+          <div class="product-info">
+            <span class="product-category">MATCHDAY ORIGINALS</span>
+
+            <h3>GORRA MATCHDAY</h3>
+
+            <p>Diseño casual con identidad deportiva.</p>
+
+            <div class="product-buy">
+              <strong>$399 <small>MXN</small></strong>
+
+              <button class="ver-producto"
+                data-nombre="GORRA MATCHDAY"
+                data-precio="$399 MXN"
+                data-imagen="img/gorra.jpg">
+                Ver producto ↗
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- TRACKSUIT -->
+        <article class="product-card">
+
+          <div class="product-image">
+            <img src="img/conjunto.jpg" alt="Tracksuit MatchDay">
+            <span class="product-number">03</span>
+          </div>
+
+          <div class="product-info">
+            <span class="product-category">MATCHDAY ORIGINALS</span>
+
+            <h3>TRACKSUIT MATCHDAY</h3>
+
+            <p>Estilo deportivo para todos los días.</p>
+
+            <div class="product-buy">
+              <strong>$899 <small>MXN</small></strong>
+
+              <button class="ver-producto"
+                data-nombre="TRACKSUIT MATCHDAY"
+                data-precio="$899 MXN"
+                data-imagen="img/conjunto.jpg">
+                Ver producto ↗
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- TRAINING PACK -->
+        <article class="product-card">
+
+          <div class="product-image">
+            <img src="img/pack.jpg" alt="Training Pack MatchDay">
+            <span class="product-number">04</span>
+          </div>
+
+          <div class="product-info">
+            <span class="product-category">MATCHDAY ORIGINALS</span>
+
+            <h3>MATCHDAY TRAINING PACK</h3>
+
+            <p>Accesorios para acompañarte en cada partido.</p>
+
+            <div class="product-buy">
+              <strong>$599 <small>MXN</small></strong>
+
+              <button class="ver-producto"
+                data-nombre="MATCHDAY TRAINING PACK"
+                data-precio="$599 MXN"
+                data-imagen="img/pack.jpg">
+                Ver producto ↗
+              </button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PIE DE PÁGINA LIMPIO -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>MATCH<span>DAY</span></strong>
+        <p>El fútbol se vive aquí.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- VENTANA EMERGENTE -->
+  <div class="modal-fondo" id="modalProducto"
+       role="dialog" aria-modal="true"
+       aria-label="Información del producto">
+
+    <div class="modal-contenido">
+
+      <button class="cerrar-modal"
+              id="cerrarModal"
+              aria-label="Cerrar ventana">×</button>
+
+      <!-- PASO 1: PRODUCTO -->
+      <div id="pasoProducto">
+
+        <img id="imagenProducto"
+             class="modal-imagen"
+             src=""
+             alt="Producto seleccionado">
+
+        <span class="eyebrow">MATCHDAY ORIGINALS</span>
+
+        <h2 id="nombreProducto"></h2>
+
+        <p class="modal-precio" id="precioProducto"></p>
+
+        <button class="boton-modal" id="masInformacion">
+          Más información ↗
+        </button>
+
+      </div>
+
+      <!-- PASO 2: EMAIL -->
+      <div id="pasoEmail" class="oculto">
+
+        <span class="eyebrow">MATCHDAY ORIGINALS</span>
+
+        <h2>¿QUIERES SABER MÁS?</h2>
+
+        <p class="modal-descripcion">
+          Ingresa tu correo electrónico para obtener
+          más información acerca de este producto.
+        </p>
+
+        <form id="formularioEmail">
+
+          <input
+            type="email"
+            id="correo"
+            class="campo-email"
+            placeholder="Tu correo electrónico"
+            aria-label="Correo electrónico"
+            autocomplete="email"
+            required>
+
+          <button type="submit" class="boton-modal">
+            Confirmar
+          </button>
+
+        </form>
+
+      </div>
+
+      <!-- PASO 3: AGRADECIMIENTO -->
+      <div id="pasoGracias" class="oculto">
+
+        <div class="check-gracias">✓</div>
+
+        <h2>¡MUCHAS GRACIAS!</h2>
+
+        <p class="mensaje-gracias">
+          Gracias por interesarte en los productos
+          de MatchDay.
+          <br>
+          ¡Nos encanta que formes parte de nuestra pasión
+          por el fútbol!
+        </p>
+
+        <button class="boton-modal" id="terminar">
+          Volver a la tienda
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+
+  <script>
+    // Elementos de la ventana
+    const modal = document.getElementById("modalProducto");
+
+    const pasoProducto = document.getElementById("pasoProducto");
+    const pasoEmail = document.getElementById("pasoEmail");
+    const pasoGracias = document.getElementById("pasoGracias");
+
+    const imagenProducto = document.getElementById("imagenProducto");
+    const nombreProducto = document.getElementById("nombreProducto");
+    const precioProducto = document.getElementById("precioProducto");
+
+    const formulario = document.getElementById("formularioEmail");
+    const correo = document.getElementById("correo");
+
+    // Mostrar un paso y ocultar los otros
+    function mostrarPaso(paso) {
+      pasoProducto.classList.add("oculto");
+      pasoEmail.classList.add("oculto");
+      pasoGracias.classList.add("oculto");
+
+      paso.classList.remove("oculto");
+    }
+
+    // Abrir el producto seleccionado
+    document.querySelectorAll(".ver-producto").forEach(boton => {
+
+      boton.addEventListener("click", function() {
+
+        imagenProducto.src = this.dataset.imagen;
+        nombreProducto.textContent = this.dataset.nombre;
+        precioProducto.textContent = this.dataset.precio;
+
+        formulario.reset();
+
+        mostrarPaso(pasoProducto);
+        modal.classList.add("visible");
+
+        document.body.style.overflow = "hidden";
+        document.getElementById("cerrarModal").focus();
+
+      });
+
+    });
+
+    // Pasar al formulario de correo
+    document.getElementById("masInformacion")
+      .addEventListener("click", function() {
+
+        mostrarPaso(pasoEmail);
+        correo.focus();
+
+      });
+
+    // Confirmar correo y mostrar agradecimiento
+    formulario.addEventListener("submit", function(evento) {
+
+      evento.preventDefault();
+
+      if (formulario.checkValidity()) {
+        mostrarPaso(pasoGracias);
+        document.getElementById("terminar").focus();
+      }
+
+    });
+
+    // Cerrar ventana
+    function cerrarVentana() {
+      modal.classList.remove("visible");
+      document.body.style.overflow = "";
+    }
+
+    document.getElementById("cerrarModal")
+      .addEventListener("click", cerrarVentana);
+
+    document.getElementById("terminar")
+      .addEventListener("click", cerrarVentana);
+
+    // Cerrar al hacer clic fuera de la ventana
+    modal.addEventListener("click", function(evento) {
+      if (evento.target === modal) {
+        cerrarVentana();
+      }
+    });
+
+    // Cerrar con la tecla Escape
+    document.addEventListener("keydown", function(evento) {
+      if (evento.key === "Escape") {
+        cerrarVentana();
+      }
+    });
+  </script>
+
+</body>
+</html>

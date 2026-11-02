@@ -1,0 +1,379 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Próximos partidos | MatchDay</title>
+  <link rel="stylesheet" href="css/styles.css">
+
+  <style>
+    .partidos-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin: 30px 0 70px;
+    }
+
+    .partido {
+      background: white;
+      border: 1px solid #e1e7e1;
+      border-radius: 14px;
+      padding: 26px;
+      box-shadow: 0 5px 22px #0e3f2a0b;
+    }
+
+    .partido-liga {
+      color: #176b45;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 26px;
+    }
+
+    .partido-equipos {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .equipo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      text-align: center;
+    }
+
+    .equipo img {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+    }
+
+    .equipo strong {
+      font-size: 14px;
+    }
+
+    .vs {
+      color: #9ca99f;
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .partido-acciones {
+      border-top: 1px solid #e1e7e1;
+      margin-top: 25px;
+      padding-top: 20px;
+    }
+
+    .boton-detalles {
+      width: 100%;
+      border: 0;
+      border-radius: 7px;
+      padding: 13px;
+      background: #0e3f2a;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .boton-detalles:hover {
+      background: #176b45;
+    }
+
+    /* Ventana emergente */
+    .modal-fondo {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #000b;
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-fondo.visible {
+      display: flex;
+    }
+
+    .modal {
+      position: relative;
+      background: white;
+      width: 100%;
+      max-width: 470px;
+      border-radius: 15px;
+      padding: 35px;
+      text-align: center;
+    }
+
+    .cerrar {
+      position: absolute;
+      top: 12px;
+      right: 17px;
+      border: 0;
+      background: none;
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    .modal h2 {
+      margin: 15px 0;
+      font-size: 27px;
+    }
+
+    .modal p {
+      color: #68766d;
+      margin: 12px 0;
+    }
+
+    .modal-escudos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 25px;
+      margin: 25px 0;
+    }
+
+    .modal-escudos img {
+      width: 85px;
+      height: 85px;
+      object-fit: contain;
+    }
+
+    .pie {
+      background: #0e3f2a;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    @media (max-width: 750px) {
+      .partidos-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .partido {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- MENÚ -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">M</span>
+        <span>MATCH<span class="brand-day">DAY</span></span>
+      </a>
+
+      <button class="menu-toggle"
+              aria-label="Abrir menú"
+              aria-expanded="false">☰</button>
+
+      <div class="nav-links">
+        <a href="index.html">Inicio</a>
+        <a href="partidos.html" class="active">Partidos</a>
+        <a href="resultados.html">Resultados</a>
+        <a href="equipos.html">Equipos</a>
+        <a href="tienda.html">Tienda</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ENCABEZADO -->
+  <header class="page-header">
+    <div class="container">
+      <span class="eyebrow">MATCHDAY / FÚTBOL</span>
+      <h1>Próximos partidos</h1>
+      <p>Los grandes enfrentamientos del fútbol.</p>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <span class="kicker">EL CALENDARIO</span>
+          <h2>Partidos destacados</h2>
+        </div>
+      </div>
+
+      <div class="partidos-grid" id="listaPartidos"></div>
+    </section>
+
+  </main>
+
+  <!-- VENTANA DE DETALLES -->
+  <div class="modal-fondo" id="ventana">
+    <div class="modal">
+      <button class="cerrar" id="cerrar">×</button>
+
+      <span class="kicker" id="modalLiga"></span>
+
+      <div class="modal-escudos">
+        <img id="escudoLocal" alt="Equipo local">
+        <strong>VS</strong>
+        <img id="escudoVisitante" alt="Equipo visitante">
+      </div>
+
+      <h2 id="modalPartido"></h2>
+      <p id="modalEstadio"></p>
+      <p id="modalCiudad"></p>
+    </div>
+  </div>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="pie">
+    <strong>MATCHDAY</strong>
+    <p>El fútbol se vive aquí.</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+
+  <script>
+    // Información de los partidos
+    const partidos = [
+      {
+        liga: "LALIGA",
+        local: "Real Madrid",
+        visitante: "Barcelona",
+        escudoLocal: "86",
+        escudoVisitante: "83",
+        estadio: "Santiago Bernabéu",
+        ciudad: "Madrid, España"
+      },
+      {
+        liga: "LIGA MX",
+        local: "América",
+        visitante: "Cruz Azul",
+        escudoLocal: "227",
+        escudoVisitante: "218",
+        estadio: "Estadio Ciudad de los Deportes",
+        ciudad: "Ciudad de México"
+      },
+      {
+        liga: "PREMIER LEAGUE",
+        local: "Manchester City",
+        visitante: "Arsenal",
+        escudoLocal: "382",
+        escudoVisitante: "359",
+        estadio: "Etihad Stadium",
+        ciudad: "Mánchester, Inglaterra"
+      },
+      {
+        liga: "PREMIER LEAGUE",
+        local: "Liverpool",
+        visitante: "Chelsea",
+        escudoLocal: "364",
+        escudoVisitante: "363",
+        estadio: "Anfield",
+        ciudad: "Liverpool, Inglaterra"
+      }
+    ];
+
+    // Dirección de los escudos
+    function obtenerEscudo(id) {
+      return "https://a.espncdn.com/i/teamlogos/soccer/500/"
+        + id + ".png";
+    }
+
+    const lista = document.getElementById("listaPartidos");
+
+    // Crear una tarjeta por cada partido
+    partidos.forEach(function(partido, posicion) {
+
+      lista.innerHTML += `
+        <article class="partido">
+
+          <div class="partido-liga">
+            ${partido.liga}
+          </div>
+
+          <div class="partido-equipos">
+
+            <div class="equipo">
+              <img src="${obtenerEscudo(partido.escudoLocal)}"
+                   alt="${partido.local}">
+              <strong>${partido.local}</strong>
+            </div>
+
+            <span class="vs">VS</span>
+
+            <div class="equipo">
+              <img src="${obtenerEscudo(partido.escudoVisitante)}"
+                   alt="${partido.visitante}">
+              <strong>${partido.visitante}</strong>
+            </div>
+
+          </div>
+
+          <div class="partido-acciones">
+            <button class="boton-detalles"
+                    onclick="verDetalles(${posicion})">
+              Ver detalles ↗
+            </button>
+          </div>
+
+        </article>
+      `;
+    });
+
+    // Mostrar los detalles del partido seleccionado
+    function verDetalles(posicion) {
+
+      const partido = partidos[posicion];
+
+      document.getElementById("modalLiga").textContent =
+        partido.liga;
+
+      document.getElementById("modalPartido").textContent =
+        partido.local + " vs " + partido.visitante;
+
+      document.getElementById("modalEstadio").textContent =
+        "Estadio: " + partido.estadio;
+
+      document.getElementById("modalCiudad").textContent =
+        partido.ciudad;
+
+      document.getElementById("escudoLocal").src =
+        obtenerEscudo(partido.escudoLocal);
+
+      document.getElementById("escudoVisitante").src =
+        obtenerEscudo(partido.escudoVisitante);
+
+      document.getElementById("ventana")
+        .classList.add("visible");
+    }
+
+    // Cerrar la ventana
+    function cerrarVentana() {
+      document.getElementById("ventana")
+        .classList.remove("visible");
+    }
+
+    document.getElementById("cerrar")
+      .addEventListener("click", cerrarVentana);
+
+    document.getElementById("ventana")
+      .addEventListener("click", function(evento) {
+        if (evento.target === this) {
+          cerrarVentana();
+        }
+      });
+
+    document.addEventListener("keydown", function(evento) {
+      if (evento.key === "Escape") {
+        cerrarVentana();
+      }
+    });
+  </script>
+
+</body>
+</html>

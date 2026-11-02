@@ -1,0 +1,613 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MatchDay | Vive el fútbol</title>
+
+  <link rel="stylesheet" href="css/styles.css">
+
+  <style>
+    /* Mejoras exclusivas de la página de inicio */
+    .md-hero {
+      background: #0b3221;
+      color: white;
+      padding: 65px 0;
+    }
+
+    .md-hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 45px;
+      align-items: center;
+    }
+
+    .md-label {
+      color: #a8d9b7;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .md-hero h1 {
+      font-family: 'Barlow Condensed', Arial, sans-serif;
+      font-size: clamp(54px, 7vw, 94px);
+      font-weight: 900;
+      line-height: 0.95;
+      text-transform: uppercase;
+      margin: 22px 0;
+    }
+
+    .md-hero h1 span {
+      color: #a4d7b2;
+    }
+
+    .md-hero p {
+      color: #d2e5d7;
+      line-height: 1.8;
+      max-width: 450px;
+    }
+
+    .md-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    .md-primary,
+    .md-secondary {
+      padding: 14px 20px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .md-primary {
+      background: white;
+      color: #0b3221;
+    }
+
+    .md-secondary {
+      border: 1px solid #8ba99a;
+      color: white;
+    }
+
+    .md-hero-photo {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      height: 390px;
+    }
+
+    .md-hero-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .md-photo-text {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 55px 24px 22px;
+      background: linear-gradient(transparent, #071c14);
+      color: white;
+      font-family: 'Barlow Condensed', Arial, sans-serif;
+      font-size: 38px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .md-section {
+      padding: 65px 0 20px;
+    }
+
+    .md-section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .md-section-head h2 {
+      font-family: 'Barlow Condensed', Arial, sans-serif;
+      font-size: 43px;
+      text-transform: uppercase;
+      margin: 8px 0 0;
+    }
+
+    .md-link {
+      color: #12683d;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .md-matches {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .md-match {
+      background: white;
+      border: 1px solid #e1e8e1;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 8px 25px #143d2210;
+    }
+
+    .md-match-top {
+      display: flex;
+      justify-content: space-between;
+      color: #66776c;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 25px;
+    }
+
+    .md-match-top span:last-child {
+      color: #197747;
+    }
+
+    .md-teams {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .md-team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+    }
+
+    .md-team img {
+      width: 66px;
+      height: 66px;
+      object-fit: contain;
+    }
+
+    .md-team strong {
+      font-size: 13px;
+    }
+
+    .md-vs {
+      font-family: 'Barlow Condensed', Arial, sans-serif;
+      font-size: 24px;
+      font-weight: 900;
+      color: #a0aca3;
+    }
+
+    .md-match-bottom {
+      border-top: 1px solid #e8eee8;
+      margin-top: 24px;
+      padding-top: 15px;
+      color: #647569;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .md-results {
+      display: grid;
+      gap: 12px;
+    }
+
+    .md-result {
+      display: grid;
+      grid-template-columns: 140px 1fr auto 1fr;
+      gap: 20px;
+      align-items: center;
+      background: white;
+      border: 1px solid #e1e8e1;
+      border-radius: 10px;
+      padding: 18px 25px;
+    }
+
+    .md-league {
+      font-size: 11px;
+      color: #758279;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .md-result-team {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .md-result-team img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+    }
+
+    .md-result-team.right {
+      justify-content: flex-end;
+    }
+
+    .md-score {
+      background: #103e2a;
+      color: white;
+      border-radius: 7px;
+      padding: 11px 17px;
+      font-weight: 900;
+      font-size: 21px;
+      white-space: nowrap;
+    }
+
+    .md-store {
+      margin-top: 65px;
+      margin-bottom: 65px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: #151817;
+      border-radius: 14px;
+      overflow: hidden;
+      color: white;
+    }
+
+    .md-store-copy {
+      padding: 55px;
+      align-self: center;
+    }
+
+    .md-store h2 {
+      font-family: 'Barlow Condensed', Arial, sans-serif;
+      font-size: clamp(45px, 5vw, 72px);
+      line-height: 0.95;
+      margin: 18px 0;
+    }
+
+    .md-store p {
+      color: #bdc6c0;
+      line-height: 1.7;
+      margin-bottom: 30px;
+    }
+
+    .md-store img {
+      width: 100%;
+      height: 100%;
+      min-height: 350px;
+      object-fit: cover;
+    }
+
+    .md-footer {
+      background: #0b3221;
+      color: white;
+      padding: 32px 0;
+      margin-top: 40px;
+    }
+
+    .md-footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .md-footer strong {
+      font-size: 21px;
+      letter-spacing: -1px;
+    }
+
+    .md-footer strong span {
+      color: #a4d7b2;
+    }
+
+    .md-footer p {
+      font-size: 12px;
+      color: #b7d0c0;
+      margin: 5px 0 0;
+    }
+
+    @media (max-width: 800px) {
+      .md-hero-inner,
+      .md-matches,
+      .md-store {
+        grid-template-columns: 1fr;
+      }
+
+      .md-hero-photo {
+        height: 290px;
+      }
+
+      .md-result {
+        grid-template-columns: 1fr auto 1fr;
+        gap: 10px;
+        padding: 15px;
+      }
+
+      .md-league {
+        grid-column: 1 / -1;
+      }
+
+      .md-result-team {
+        font-size: 11px;
+        gap: 6px;
+      }
+
+      .md-result-team img {
+        width: 28px;
+        height: 28px;
+      }
+
+      .md-score {
+        font-size: 17px;
+        padding: 9px;
+      }
+
+      .md-store-copy {
+        padding: 30px;
+      }
+
+      .md-section-head h2 {
+        font-size: 34px;
+      }
+
+      .md-footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- MENÚ DE NAVEGACIÓN -->
+  <nav class="nav">
+    <div class="container nav-inner">
+
+      <a class="brand" href="index.html">
+        <span class="brand-mark">M</span>
+        <span>MATCH<span class="brand-day">DAY</span></span>
+      </a>
+
+      <button class="menu-toggle" aria-label="Abrir menú"
+              aria-expanded="false">☰</button>
+
+      <div class="nav-links">
+        <a href="index.html" class="active">Inicio</a>
+        <a href="partidos.html">Partidos</a>
+        <a href="resultados.html">Resultados</a>
+        <a href="equipos.html">Equipos</a>
+        <a href="tienda.html">Tienda</a>
+      </div>
+
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- PORTADA -->
+    <header class="md-hero">
+      <div class="container md-hero-inner">
+
+        <div>
+          <span class="md-label">Bienvenido a MatchDay</span>
+
+          <h1>
+            EL FÚTBOL<br>
+            SE <span>VIVE AQUÍ.</span>
+          </h1>
+
+          <p>
+            Tu espacio para seguir a los mejores equipos,
+            descubrir próximos encuentros y consultar
+            los resultados del fútbol mundial.
+          </p>
+
+          <div class="md-actions">
+            <a href="partidos.html" class="md-primary">
+              Explorar partidos ↗
+            </a>
+
+            <a href="tienda.html" class="md-secondary">
+              MatchDay Store ↗
+            </a>
+          </div>
+        </div>
+
+        <div class="md-hero-photo">
+          <img src="img/balon.jpg" alt="Balón MatchDay">
+          <div class="md-photo-text">
+            THE BEAUTIFUL<br>GAME.
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- PRÓXIMOS PARTIDOS -->
+    <section class="md-section container">
+
+      <div class="md-section-head">
+        <div>
+          <span class="md-label">EL CALENDARIO</span>
+          <h2>Próximos partidos</h2>
+        </div>
+
+        <a class="md-link" href="partidos.html">
+          Ver calendario completo ↗
+        </a>
+      </div>
+
+      <div class="md-matches">
+
+        <article class="md-match">
+          <div class="md-match-top">
+            <span>LALIGA</span>
+            <span>PRÓXIMO ENCUENTRO</span>
+          </div>
+
+          <div class="md-teams">
+            <div class="md-team">
+              <img
+                src="https://a.espncdn.com/i/teamlogos/soccer/500/86.png"
+                alt="Real Madrid">
+              <strong>Real Madrid</strong>
+            </div>
+
+            <span class="md-vs">VS</span>
+
+            <div class="md-team">
+              <img
+                src="https://a.espncdn.com/i/teamlogos/soccer/500/83.png"
+                alt="Barcelona">
+              <strong>Barcelona</strong>
+            </div>
+          </div>
+
+          <div class="md-match-bottom">
+            Real Madrid vs Barcelona
+          </div>
+        </article>
+
+        <article class="md-match">
+          <div class="md-match-top">
+            <span>PREMIER LEAGUE</span>
+            <span>PRÓXIMO ENCUENTRO</span>
+          </div>
+
+          <div class="md-teams">
+            <div class="md-team">
+              <img
+                src="https://a.espncdn.com/i/teamlogos/soccer/500/382.png"
+                alt="Manchester City">
+              <strong>Manchester City</strong>
+            </div>
+
+            <span class="md-vs">VS</span>
+
+            <div class="md-team">
+              <img
+                src="https://a.espncdn.com/i/teamlogos/soccer/500/359.png"
+                alt="Arsenal">
+              <strong>Arsenal</strong>
+            </div>
+          </div>
+
+          <div class="md-match-bottom">
+            Manchester City vs Arsenal
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- RESULTADOS -->
+    <section class="md-section container">
+
+      <div class="md-section-head">
+        <div>
+          <span class="md-label">EL MARCADOR</span>
+          <h2>Resultados destacados</h2>
+        </div>
+
+        <a class="md-link" href="resultados.html">
+          Todos los resultados ↗
+        </a>
+      </div>
+
+      <div class="md-results">
+
+        <article class="md-result">
+          <span class="md-league">LALIGA</span>
+
+          <div class="md-result-team">
+            <img
+              src="https://a.espncdn.com/i/teamlogos/soccer/500/86.png"
+              alt="Real Madrid">
+            <span>Real Madrid</span>
+          </div>
+
+          <span class="md-score">2 - 1</span>
+
+          <div class="md-result-team right">
+            <span>Barcelona</span>
+            <img
+              src="https://a.espncdn.com/i/teamlogos/soccer/500/83.png"
+              alt="Barcelona">
+          </div>
+        </article>
+
+        <article class="md-result">
+          <span class="md-league">PREMIER LEAGUE</span>
+
+          <div class="md-result-team">
+            <img
+              src="https://a.espncdn.com/i/teamlogos/soccer/500/364.png"
+              alt="Liverpool">
+            <span>Liverpool</span>
+          </div>
+
+          <span class="md-score">3 - 0</span>
+
+          <div class="md-result-team right">
+            <span>Chelsea</span>
+            <img
+              src="https://a.espncdn.com/i/teamlogos/soccer/500/363.png"
+              alt="Chelsea">
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- MATCHDAY STORE -->
+    <section class="md-store container">
+
+      <div class="md-store-copy">
+        <span class="md-label">MATCHDAY ORIGINALS</span>
+
+        <h2>
+          MÁS QUE<br>
+          FÚTBOL.
+        </h2>
+
+        <p>
+          Descubre nuestra colección de ropa y accesorios
+          con identidad propia. Diseñados para llevar
+          tu pasión por el fútbol a todas partes.
+        </p>
+
+        <a href="tienda.html" class="md-primary">
+          Explorar la tienda ↗
+        </a>
+      </div>
+
+      <img src="img/store-banner.jpg"
+           alt="Colección MatchDay Store">
+
+    </section>
+
+  </main>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="md-footer">
+    <div class="container md-footer-inner">
+      <div>
+        <strong>MATCH<span>DAY</span></strong>
+        <p>El fútbol se vive aquí.</p>
+      </div>
+
+      <p>Fútbol · Resultados · Equipos · Store</p>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+
+</body>
+</html>
